@@ -30,6 +30,9 @@
     <ClCompile Include="shader_s.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="stb_image.cpp">
+      <Filter>头文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader_s.h">
@@ -38,13 +41,16 @@
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexShader.hlsl">
+    <None Include="shader.fs">
       <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="PixelShader.hlsl">
+    </None>
+    <None Include="shader.vs">
       <Filter>shaders</Filter>
-    </FxCompile>
+    </None>
   </ItemGroup>
 </Project>

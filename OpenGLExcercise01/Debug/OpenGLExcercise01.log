@@ -1,4 +1,2 @@
-﻿E:\CPP\GitHub\OpenGLLearn\OpenGLExcercise01\PixelShader.hlsl(1,2-8): error X1504: invalid preprocessor command 'version'
-E:\CPP\GitHub\OpenGLLearn\OpenGLExcercise01\PixelShader.hlsl(2,1-3): error X3000: syntax error: unexpected token 'out'
-  
-  compilation failed; no code produced
+﻿  ShaderLearn.cpp
+  OpenGLExcercise01.vcxproj -> E:\CPP\GitHub\OpenGLLearn\OpenGLExcercise01\Debug\OpenGLExcercise01.exe

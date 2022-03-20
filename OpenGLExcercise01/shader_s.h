@@ -8,15 +8,13 @@
 
 using namespace std;
 
-enum ShaderCompileType
+enum  ShaderCompileType
 {
 	VERTEX, FRAGMENT, PROGRAM
 };
 
 class Shader
 {
-
-
 public:
 	unsigned int ID;
 
@@ -121,9 +119,4 @@ private:
 		}
 	}
 };
-
-
-
-
-
 #endif // !SHADER_H

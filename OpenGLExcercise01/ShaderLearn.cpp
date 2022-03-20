@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "shader_s.h"
+#include "stb_image.h"
 
 using namespace std;
 void framebuffer_size_callback1(GLFWwindow* window, int width, int height);
@@ -24,26 +25,21 @@ void processInput1(GLFWwindow* window)
 		glfwSetWindowShouldClose(window, true);
 		cout << "关闭OpenGL Window!" << endl;
 	}
+	else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	{
+
+	}
+	else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	{
+
+	}
 }
 
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"layout (location = 1) in vec3 aColor;\n"
-"out vec3 ourColor; \n"
-"void main()\n"
-"{\n"
-"gl_Position = vec4(aPos, 1.0);\n"
-"ourColor=aColor;\n"
-"}\0";
-
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"in vec3 ourColor;\n"
-"void main()\n"
-"{\n"
-"	FragColor =vec4( ourColor,1.0);\n"
-"}\n\0 ";
-
+bool glProcessInput(GLFWwindow* window, int GLFW_Key)
+{
+	
+	return glfwGetKey(window, GLFW_Key) == GLFW_PRESS;
+}
 
 int main(int argc, char* argv[])
 {
@@ -74,74 +70,38 @@ int main(int argc, char* argv[])
 	}
 #pragma endregion
 
-#pragma region 着色器准备工作
-	//1.顶点着色器,并编译
-	unsigned int vertexShader;
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	Shader ourShader("shader.vs", "shader.fs");
 
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader);
-	int success;
-	char infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-
-	//2.片段着色器，并编译
-	unsigned int fragmentShader;
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-
-
-	//3.着色器程序，并链接顶点着色器和片段着色器，并编译
-	unsigned int shaderProgram;
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if (!success) {
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-	}
-
-
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
-#pragma endregion
-
-
-
+#pragma region VAO,VBO,EBO设置
 	float vertices[] =
 	{
-	 0.5f,  -0.5f, 0.0f,   1.0f, 0.0f, 0.0f,                 // top right
-	 -0.5f, -0.5f, 0.0f,      0.0f, 1.0f, 0.0f,               // bottom right
-	0.0f, 0.5f, 0.0f,      0.0f, 0.0f, 1.0f,               // bottom left
-          // top left 
+		//// x      y    z        r     g    b            s    t
+		// 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,       1.0f,1.0f,          // top right
+		// 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,       1.0f,0.0f,        // bottom right
+		//-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,       0.0f,0.0f,        // bottom left
+		//-0.5f,  0.5f, 0.0f,	  1.0f, 1.0f, 0.0f,		  0.0f,1.0f							 // top left 
+			 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
+			 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+			-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
+			-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
+	};
+
+
+	float texCoords[] = {
+		0.0f,0.0f,
+		1.0f,0.0f,
+		0.5f,1.0f
 	};
 
 	unsigned int indices[] = {
 		0,1,3,
-		7,8,9
+		1,2,3
 	};
 	unsigned VAO, VBO, EBO;
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
-	//glGenBuffers(1, &EBO);
+	glGenBuffers(1, &EBO);
 	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
 
 	//1.绑定VAO
@@ -151,44 +111,118 @@ int main(int argc, char* argv[])
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	//3.绑定EBO，将元素索引数组配置到顶点属性中
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
-	glUseProgram(shaderProgram);
+#pragma endregion
+#pragma region 纹理
+	unsigned int texture1, texture2;
+	glGenTextures(1, &texture1);
+	glBindTexture(GL_TEXTURE_2D, texture1);
+	//为当前绑定的纹理对象设置环绕，过滤方式
+	//x重复
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	//y重复
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	//缩小线性过滤
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//放大线性过滤
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-	//glBindVertexArray(0);
+
+	int width, height, nrChannels;
+	stbi_set_flip_vertically_on_load(true);
+	unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		cout << "Failed to load texture1" << endl;
+	}
+
+	//释放图像的内存
+	stbi_image_free(data);
+
+	glGenTextures(1, &texture2);
+	glBindTexture(GL_TEXTURE_2D, texture2);
+	//x重复
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	//y重复
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 
-	Shader ourShader("shaders/VertexShader.hlsl", "shaders/PixelShader.hlsl");
+
+	//缩小线性过滤
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//放大线性过滤
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		cout << "Failed to load texture2" << endl;
+	}
+	stbi_image_free(data);
+#pragma endregion
 
 
 
+
+	ourShader.use();
+
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture1);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, texture2);
+	ourShader.setInt("texture1", 0);
+	//glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0); // 手动设置
+	ourShader.setInt("texture2", 1); // 或者使用着色器类设置
+	//ourShader.use();
+	glBindVertexArray(VAO);
+	float lerpA = 0.5f;
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput1(window);
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//int ourColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+
 		//float timeValue = glfwGetTime();
 		//float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-		//glUniform4f(ourColorLocation, 1.0f, greenValue, 0.0f, 1.0f);
+		
+		if (glProcessInput(window,GLFW_KEY_UP))
+		{
+			lerpA = (lerpA + 0.001f < 1.0f) ? lerpA + 0.001f : 1.0f;			
+		}
+
+		if (glProcessInput(window, GLFW_KEY_DOWN))
+		{
+			lerpA = (lerpA - 0.001f > 0.0f) ? lerpA - 0.001f : 0.0f;
+		}
+
+		ourShader.setFloat("ourGreen", lerpA);
 
 
-		//glUseProgram(shaderProgram);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		//glBindVertexArray(0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -197,8 +231,7 @@ int main(int argc, char* argv[])
 
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
-	//glDeleteBuffers(1, &EBO);
-	glDeleteProgram(shaderProgram);
+	glDeleteBuffers(1, &EBO);
 
 
 	glfwTerminate();
