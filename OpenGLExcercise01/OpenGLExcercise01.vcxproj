@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\OpenGL\glad\include\KHR;E:\OpenGL\glad\include\glad;E:\OpenGL\glfw-3.3.6.bin.WIN32\glfw-3.3.6.bin.WIN32\include;E:\OpenGL\glew-2.1.0-win32\glew-2.1.0\include;E:\OpenGL\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\OpenGL\glad\include\KHR;E:\OpenGL\glad\include\glad;E:\OpenGL\glfw-3.3.6.bin.WIN32\glfw-3.3.6.bin.WIN32\include;E:\OpenGL\glew-2.1.0-win32\glew-2.1.0\include;E:\OpenGL\glad\include;E:\OpenGL\glm-master;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,7 +105,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\OpenGL\glad\include\KHR;E:\OpenGL\glad\include\glad;E:\OpenGL\glfw-3.3.6.bin.WIN32\glfw-3.3.6.bin.WIN32\include;E:\OpenGL\glew-2.1.0-win32\glew-2.1.0\include;E:\OpenGL\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\OpenGL\glad\include\KHR;E:\OpenGL\glad\include\glad;E:\OpenGL\glfw-3.3.6.bin.WIN32\glfw-3.3.6.bin.WIN32\include;E:\OpenGL\glew-2.1.0-win32\glew-2.1.0\include;E:\OpenGL\glad\include;E:\OpenGL\glm-master;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\OpenGL\glad\include\KHR;E:\OpenGL\glad\include\glad;E:\OpenGL\glfw-3.3.6.bin.WIN32\glfw-3.3.6.bin.WIN32\include;E:\OpenGL\glew-2.1.0-win32\glew-2.1.0\include;E:\OpenGL\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\OpenGL\glad\include\KHR;E:\OpenGL\glad\include\glad;E:\OpenGL\glfw-3.3.6.bin.WIN32\glfw-3.3.6.bin.WIN32\include;E:\OpenGL\glew-2.1.0-win32\glew-2.1.0\include;E:\OpenGL\glad\include;E:\OpenGL\glm-master;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,7 +139,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\OpenGL\glad\include\KHR;E:\OpenGL\glad\include\glad;E:\OpenGL\glfw-3.3.6.bin.WIN32\glfw-3.3.6.bin.WIN32\include;E:\OpenGL\glew-2.1.0-win32\glew-2.1.0\include;E:\OpenGL\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\OpenGL\glad\include\KHR;E:\OpenGL\glad\include\glad;E:\OpenGL\glfw-3.3.6.bin.WIN32\glfw-3.3.6.bin.WIN32\include;E:\OpenGL\glew-2.1.0-win32\glew-2.1.0\include;E:\OpenGL\glad\include;E:\OpenGL\glm-master;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

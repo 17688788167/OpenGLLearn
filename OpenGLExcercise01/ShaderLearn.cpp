@@ -5,6 +5,10 @@
 #include <iostream>
 #include "shader_s.h"
 #include "stb_image.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 using namespace std;
 void framebuffer_size_callback1(GLFWwindow* window, int width, int height);
@@ -183,11 +187,31 @@ int main(int argc, char* argv[])
 #pragma endregion
 
 
+#pragma region 变换
+	//glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+	//glm::mat4 trans = glm::mat4(1.0f);
+	//
+	//trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
+	//vec = trans * vec;
+	//cout << vec.x << vec.y << vec.z << endl;
+	//先缩放，再旋转，最后平移，矩阵相乘是从右往左与向量相乘
+	glm::mat4 trans = glm::mat4(1.0f);;
+	trans = glm::translate(trans, glm::vec3(0.3, 0, 0));
+	trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0));
+	trans = glm::scale(trans, glm::vec3(1.5, 0.5, 0.5));
+	
+
+	
+
+
+#pragma endregion
+
+
 
 
 	ourShader.use();
-
-
+	ourShader.setMatrix4x4("transform", trans);
+	
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture1);
 	glActiveTexture(GL_TEXTURE1);
