@@ -77,17 +77,48 @@ int main(int argc, char* argv[])
 	Shader ourShader("shader.vs", "shader.fs");
 
 #pragma region VAO,VBO,EBO设置
-	float vertices[] =
-	{
-		//// x      y    z        r     g    b            s    t
-		// 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,       1.0f,1.0f,          // top right
-		// 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,       1.0f,0.0f,        // bottom right
-		//-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,       0.0f,0.0f,        // bottom left
-		//-0.5f,  0.5f, 0.0f,	  1.0f, 1.0f, 0.0f,		  0.0f,1.0f							 // top left 
-			 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-			 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-			-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-			-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
+	float vertices[] = {
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
 
 
@@ -119,12 +150,12 @@ int main(int argc, char* argv[])
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(6 * sizeof(float)));
+	//glEnableVertexAttribArray(2);
 
 #pragma endregion
 #pragma region 纹理
@@ -188,12 +219,7 @@ int main(int argc, char* argv[])
 
 
 #pragma region 变换
-	//glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
-	//glm::mat4 trans = glm::mat4(1.0f);
-	//
-	//trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
-	//vec = trans * vec;
-	//cout << vec.x << vec.y << vec.z << endl;
+
 	//先缩放，再旋转，最后平移，矩阵相乘是从右往左与向量相乘
 	glm::mat4 trans = glm::mat4(1.0f);
 	
@@ -221,7 +247,7 @@ int main(int argc, char* argv[])
 	model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 	glm::mat4 view = glm::mat4(1.0f);
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -6.0f));
 
 	glm::mat4 projection;
 	//projection = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
@@ -236,16 +262,16 @@ int main(int argc, char* argv[])
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, texture2);
 	ourShader.setInt("texture1", 0);
-	//glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0); // 手动设置
 	ourShader.setInt("texture2", 1); // 或者使用着色器类设置
-	//ourShader.use();
+
 	glBindVertexArray(VAO);
 	float lerpA = 0.5f;
 	while (!glfwWindowShouldClose(window))
 	{
+		glEnable(GL_DEPTH_TEST);
 		processInput1(window);
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
 
 		CurrentTime = glfwGetTime();
 
@@ -267,20 +293,11 @@ int main(int argc, char* argv[])
 
 		ourShader.setFloat("ourGreen", lerpA);
 
-
-
-		 
+		glm::mat4 model1  = glm::rotate(model, glm::radians(-55.0f)*CurrentTime, glm::vec3(1.0f, 1.0f, 1.0f));
+		ourShader.setMatrix4x4("model", model1);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-		float scale = abs(sin(CurrentTime)) ;
 		
-
-		//glm::mat4 trans2 = glm::scale(trans1, glm::vec3(scale, scale, 1));
-		//trans1 = glm::translate(trans1, glm::vec3(sin(CurrentTime),sin(CurrentTime),0));
-		//ourShader.setMatrix4x4("transform", trans2);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
