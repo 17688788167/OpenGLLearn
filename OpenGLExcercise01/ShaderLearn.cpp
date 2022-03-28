@@ -195,13 +195,16 @@ int main(int argc, char* argv[])
 	//vec = trans * vec;
 	//cout << vec.x << vec.y << vec.z << endl;
 	//先缩放，再旋转，最后平移，矩阵相乘是从右往左与向量相乘
-	glm::mat4 trans = glm::mat4(1.0f);;
+	glm::mat4 trans = glm::mat4(1.0f);
+	
 	trans = glm::translate(trans, glm::vec3(0.3, 0, 0));
 	trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0));
-	trans = glm::scale(trans, glm::vec3(1.5, 0.5, 0.5));
+	//trans = glm::scale(trans, glm::vec3(1.5, 0.5, 0.5));
+	float CurrentTime = glfwGetTime();
+	float lastTime = CurrentTime;
 	
+	glm::mat4 trans1 = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5, 0.5, 0));
 
-	
 
 
 #pragma endregion
@@ -212,6 +215,22 @@ int main(int argc, char* argv[])
 	ourShader.use();
 	ourShader.setMatrix4x4("transform", trans);
 	
+
+#pragma region 3d
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+	glm::mat4 view = glm::mat4(1.0f);
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+	glm::mat4 projection;
+	//projection = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	ourShader.setMatrix4x4("model", model);
+	ourShader.setMatrix4x4("view", view);
+	ourShader.setMatrix4x4("projection", projection);
+#pragma endregion
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture1);
 	glActiveTexture(GL_TEXTURE1);
@@ -228,7 +247,11 @@ int main(int argc, char* argv[])
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		CurrentTime = glfwGetTime();
 
+		trans = glm::rotate(trans, CurrentTime - lastTime , glm::vec3(0.0f, 0.0f, 1.0));
+		ourShader.setMatrix4x4("transform", trans);
+		lastTime = CurrentTime;
 		//float timeValue = glfwGetTime();
 		//float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
 		
@@ -245,8 +268,18 @@ int main(int argc, char* argv[])
 		ourShader.setFloat("ourGreen", lerpA);
 
 
+
+		 
+		
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+		float scale = abs(sin(CurrentTime)) ;
+		
+
+		//glm::mat4 trans2 = glm::scale(trans1, glm::vec3(scale, scale, 1));
+		//trans1 = glm::translate(trans1, glm::vec3(sin(CurrentTime),sin(CurrentTime),0));
+		//ourShader.setMatrix4x4("transform", trans2);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
