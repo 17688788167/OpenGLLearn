@@ -10,6 +10,6 @@ uniform float ourGreen;
 vec2 TexCoordOffset=vec2(-TexCoord.x,TexCoord.y);
 void main()
 {
- FragColor = mix(texture(texture1, TexCoord), texture(texture2,TexCoordOffset ), ourGreen);
+ FragColor = mix(texture(texture1, TexCoord), texture(texture2,TexCoordOffset ), 0.2f);
   // FragColor = mix(texture(ourtexture1, TexCoord), texture(ourtexture2, TexCoord), ourGreen);
 }

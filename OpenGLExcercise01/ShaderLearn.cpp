@@ -16,6 +16,20 @@ void framebuffer_size_callback1(GLFWwindow* window, int width, int height);
 void processInput1(GLFWwindow* window);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+const float sensitivity = 0.05f;
+
+float lastX, lastY;
+bool bIsFirstFrame = true;
+
+Camera ourCamera(0.0f);
+Shader ourShader;
+
+mat4 viewFinel;
+mat4 projectionFinel;
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+
+
 
 
 void framebuffer_size_callback1(GLFWwindow* window, int width, int height)
@@ -30,41 +44,62 @@ void processInput1(GLFWwindow* window)
 		glfwSetWindowShouldClose(window, true);
 		cout << "关闭OpenGL Window!" << endl;
 	}
-	else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-	{
 
-	}
-	else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-	{
-
-	}
 }
-Camera ourCamera; 
-Shader ourShader; 
 
-void glProcessInput(GLFWwindow* window,float deltaScends)
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) != GLFW_PRESS)
+	{
+		bIsFirstFrame = true;
+		return;
+	}
+	if (bIsFirstFrame)
+	{
+		bIsFirstFrame = false;
+		lastX = xpos;
+		lastY = ypos;
+		return;
+	}
+
+	float xoffset = (xpos - lastX) ;
+	float yoffset = (ypos - lastY) ;
+
+	lastX = xpos;
+	lastY = ypos;
+	//cout << xoffset << "///" << yoffset << endl;
+
+
+	viewFinel = ourCamera.UpdateCameraRot(xoffset, yoffset);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	projectionFinel = ourCamera.UpdateCameraFov(yoffset);
+}
+
+
+void glProcessInput(GLFWwindow* window, float deltaScends)
 {
 
-	//return glfwGetKey(window, GLFW_Key) == GLFW_PRESS;
-	float cameraSpeed = deltaScends*2.5f; // adjust accordingly
+	vec3 posoffset;
+	posoffset = vec3(0, 0, 0);
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		ourCamera.cameraPos += cameraSpeed * ourCamera. cameraFront;
+		posoffset.z = 1;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		ourCamera.cameraPos -= cameraSpeed * ourCamera.cameraFront;
+		posoffset.z = -1;
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		ourCamera.cameraPos -= glm::normalize(glm::cross(ourCamera.cameraFront, ourCamera.cameraUp)) * cameraSpeed;
+		posoffset.x = -1;
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		ourCamera.cameraPos += glm::normalize(glm::cross(ourCamera.cameraFront, ourCamera.cameraUp)) * cameraSpeed;
+		posoffset.x = 1;
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-		ourCamera.cameraPos += cameraSpeed * ourCamera.cameraUp;
+		posoffset.y = 1;
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-		ourCamera.cameraPos -= cameraSpeed * ourCamera.cameraUp;
-	//cout<<ourCamera.cameraPos.x<<endl;
-	//cout << ourCamera.cameraPos.y << endl;
-	//cout << ourCamera.cameraPos.z << endl;
-	ourShader.setMatrix4x4("view", ourCamera.updateCameraPos());
-	ourShader.use();
+		posoffset.y = -1;
 
+	
+	viewFinel = ourCamera.updateCameraPos(posoffset, deltaScends);
 }
 
 int main(int argc, char* argv[])
@@ -96,10 +131,10 @@ int main(int argc, char* argv[])
 	}
 #pragma endregion
 
-	ourCamera = Camera(window);
-	ourShader =Shader ("shader.vs", "shader.fs");
 
-	
+	ourShader = Shader("shader.vs", "shader.fs");
+
+
 
 #pragma region VAO,VBO,EBO设置
 	float vertices[] = {
@@ -258,13 +293,13 @@ glm::vec3(-1.3f,  1.0f, -1.5f)
 
 	//先缩放，再旋转，最后平移，矩阵相乘是从右往左与向量相乘
 	glm::mat4 trans = glm::mat4(1.0f);
-	
+
 	trans = glm::translate(trans, glm::vec3(0.3, 0, 0));
 	trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0));
 	//trans = glm::scale(trans, glm::vec3(1.5, 0.5, 0.5));
 	float CurrentTime = glfwGetTime();
 	float lastTime = CurrentTime;
-	
+
 	glm::mat4 trans1 = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5, 0.5, 0));
 
 
@@ -276,24 +311,16 @@ glm::vec3(-1.3f,  1.0f, -1.5f)
 
 	ourShader.use();
 	ourShader.setMatrix4x4("transform", trans);
-	
+
 
 #pragma region 3d
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-	glm::mat4 view = glm::mat4(1.0f);
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -6.0f));
-	
-	glm::mat4 projection;
-	//projection = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
-	projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	ourShader.setMatrix4x4("model", model);
 
-	
-	ourShader.setMatrix4x4("view", view);
-	ourShader.setMatrix4x4("projection", projection);
-
+	viewFinel = ourCamera.updateCameraPos(vec3(0, 0, 0), 0);
+	projectionFinel = ourCamera.UpdateCameraFov(0.0f);
 
 
 
@@ -308,38 +335,40 @@ glm::vec3(-1.3f,  1.0f, -1.5f)
 
 	glBindVertexArray(VAO);
 	float lerpA = 0.5f;
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	while (!glfwWindowShouldClose(window))
 	{
+		//cout << ourCamera.name << endl;
 		glEnable(GL_DEPTH_TEST);
 		processInput1(window);
-		
+		glfwSetCursorPosCallback(window, mouse_callback);
+		glfwSetScrollCallback(window, scroll_callback);
+
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		CurrentTime = glfwGetTime();
 
 		float deltaTime = CurrentTime - lastTime;
-		glProcessInput(window,deltaTime);
-		trans = glm::rotate(trans, CurrentTime - lastTime , glm::vec3(0.0f, 0.0f, 1.0));
+		glProcessInput(window, deltaTime);
+		trans = glm::rotate(trans, CurrentTime - lastTime, glm::vec3(0.0f, 0.0f, 1.0));
 		ourShader.setMatrix4x4("transform", trans);
 		lastTime = CurrentTime;
-		//float timeValue = glfwGetTime();
-		//float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-		
-		//ourCamera.rotateCamera(view);
-		
-		
-		ourShader.setFloat("ourGreen", lerpA);
 
-		glm::mat4 model1  = glm::rotate(model, glm::radians(-55.0f)*CurrentTime, glm::vec3(1.0f, 1.0f, 1.0f));
+
+		ourShader.setMatrix4x4("view", viewFinel);
+		ourShader.setMatrix4x4("projection", projectionFinel);
+
+		glm::mat4 model1 = glm::rotate(model, glm::radians(-55.0f) * CurrentTime, glm::vec3(1.0f, 1.0f, 1.0f));
 		ourShader.setMatrix4x4("model", model1);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		
+
 		for (unsigned int i = 0; i < 10; ++i)
 		{
 			glm::mat4 model2 = glm::mat4(1.0f);
 			model2 = glm::translate(model2, cubePositions[i]);
-			float angle = 20.0f * (i+1);
+			float angle = 20.0f * (i + 1);
 			model2 = glm::rotate(model2, glm::radians(angle), glm::vec3(1.0, 0.3, 0.5));
 			ourShader.setMatrix4x4("model", model2);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
