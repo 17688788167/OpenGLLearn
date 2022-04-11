@@ -9,6 +9,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
 
 
 // Default camera values
@@ -27,32 +28,107 @@ class Camera
 {
 public:
 
-	string name = "camera";
+	//视图矩阵相关属性
+	vec3 Position = glm::vec3(0.0f, 0.0f, 3.0f);
+	mat4 view;
+
+	std::string name = "camera";
 	//四元数表示旋转
 	float x, y, z, w;
 	quat MyQuaternion;
-	vec3 EulerAngles = vec3(90.0f, 45.0f, 0.0f);
+	vec3 EulerAngles = glm::vec3(90.0f, 45.0f, 0.0f);
+
+	float angle;
+
+	vec3 worldUp = glm::vec3(0, 1, 0);
+	vec3 worldFront = glm::vec3(0, 0, 1);
+	vec3 worldRight = glm::vec3(1, 0, 0);
+
+	float showPitch = PITCH;
+	float showYaw = YAW;
+	float showRoll = 0.0f;
+
+	quat getQuatByEulerAngles()
+	{
+		MyQuaternion = glm::quat(glm::vec3(radians(showPitch), radians(showYaw), radians(showRoll)));
+		return MyQuaternion;
+	}
+
+public:
+
+	Camera(const quat& q)
+	{
+		getQuatByEulerAngles();
+		getEulerAngles();
+		updateCameraVectors();
+
+	}
+
+	quat getQuat()
+	{
+		return MyQuaternion;
+	}
+
+	vec3 getEulerAngles()
+	{
+		EulerAngles = eulerAngles(MyQuaternion);
+		return EulerAngles;
+	}
+
+	vec3 getQuatUp()
+	{
+
+		return glm::rotate(MyQuaternion, WorldUp);
+	}
+	vec3 getQuatRight()
+	{
+		return rotate(MyQuaternion, worldRight);
+	}
+
+	vec3 getQuatFront()
+	{
+
+		return rotate(MyQuaternion, -worldFront);
+	}
+
+
+	mat4 GetViewMatrixByQuat()
+	{
+		vec3 target = Position + getQuatFront() ;
+		vec3 cameraup = getQuatUp();
+		view= lookAt(Position, target, cameraup);
+		cout << view[0][0] << endl;
+		//cout << cameraup.x << cameraup.y << cameraup.z  << endl;
+		return view;
+	}
+
+
+	mat4 UpdateCameraRotByQuat(float xOffset, float yOffset)
+	{
+
+		vec3 axis = vec3(xOffset, yOffset, 0.0f);
+		MyQuaternion=glm::rotate(MyQuaternion, SENSITIVITY * length(axis), normalize(axis));
+		//cout << MyQuaternion.x << MyQuaternion.y << MyQuaternion.z << endl;
+		return GetViewMatrixByQuat();
+	}
 
 
 
 
-
-	//视图矩阵相关属性
-	vec3 Position = glm::vec3(0.0f, 0.0f, 3.0f);
 	vec3 Front = vec3(0, 0, -1);
 	vec3 Up = vec3(0, 1, 0);
 
 	vec3 Right;
-	vec3 WorldUp=vec3(0,1,0);
+	vec3 WorldUp = vec3(0, 1, 0);
 
-	float MovementSpeed=2.5f;
-	float MouseSensitivity=0.05f;
+	float MovementSpeed = 2.5f;
+	float MouseSensitivity = 0.05f;
 
 	float Pitch = 0.0f;
 	float Yaw = -90.0f;
 	float Roll = 0.0f;
 
-	mat4 view;
+
 
 	//透视矩阵相关属性
 	float fov = 45.0f;
@@ -102,7 +178,7 @@ public:
 		Position += PosOffset.y * Up * speed;
 		Position += PosOffset.z * Front * speed;
 
-	//	cout << Right.x << <<endl;
+		//	cout << Right.x << <<endl;
 		return GetViewMatrix();
 	}
 
@@ -156,10 +232,6 @@ private:
 		Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 		Up = glm::normalize(glm::cross(Right, Front));
 
-	
-		//cout << "Postion:" << Position.x << Position.y << Position.z << endl;
-		//cout << "Front:" << Front.x << Front.y << Front.z << endl;
-		//cout << "Up:" << Up.x << Up.y << Up.z << endl;
 	}
 };
 

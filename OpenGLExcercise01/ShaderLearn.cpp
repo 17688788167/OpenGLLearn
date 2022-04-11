@@ -21,7 +21,7 @@ const float sensitivity = 0.05f;
 float lastX, lastY;
 bool bIsFirstFrame = true;
 
-Camera ourCamera(0.0f);
+Camera ourCamera(quat(1,1,1,1));
 Shader ourShader;
 
 mat4 viewFinel;
@@ -68,10 +68,9 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 	lastX = xpos;
 	lastY = ypos;
-	//cout << xoffset << "///" << yoffset << endl;
 
 
-	viewFinel = ourCamera.UpdateCameraRot(xoffset, yoffset);
+	viewFinel = ourCamera.UpdateCameraRotByQuat(xoffset, yoffset);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
