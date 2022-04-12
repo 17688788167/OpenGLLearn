@@ -6,6 +6,6 @@ E:\CPP\GitHub\OpenGLLearn\OpenGLExcercise01\ShaderLearn.cpp(67,16): warning C424
 E:\CPP\GitHub\OpenGLLearn\OpenGLExcercise01\ShaderLearn.cpp(69,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
 E:\CPP\GitHub\OpenGLLearn\OpenGLExcercise01\ShaderLearn.cpp(70,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
 E:\CPP\GitHub\OpenGLLearn\OpenGLExcercise01\ShaderLearn.cpp(78,46): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-E:\CPP\GitHub\OpenGLLearn\OpenGLExcercise01\ShaderLearn.cpp(299,20): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-E:\CPP\GitHub\OpenGLLearn\OpenGLExcercise01\ShaderLearn.cpp(350,28): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+E:\CPP\GitHub\OpenGLLearn\OpenGLExcercise01\ShaderLearn.cpp(300,20): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+E:\CPP\GitHub\OpenGLLearn\OpenGLExcercise01\ShaderLearn.cpp(352,28): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
   OpenGLExcercise01.vcxproj -> E:\CPP\GitHub\OpenGLLearn\OpenGLExcercise01\Debug\OpenGLExcercise01.exe

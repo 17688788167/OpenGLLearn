@@ -50,7 +50,8 @@ public:
 
 	quat getQuatByEulerAngles()
 	{
-		MyQuaternion = glm::quat(glm::vec3(radians(showPitch), radians(showYaw), radians(showRoll)));
+		//quat()
+		MyQuaternion = glm::quat(glm::vec3(radians(showPitch), radians(0.0f), radians(showRoll)));
 		return MyQuaternion;
 	}
 
@@ -77,7 +78,6 @@ public:
 
 	vec3 getQuatUp()
 	{
-
 		return glm::rotate(MyQuaternion, WorldUp);
 	}
 	vec3 getQuatRight()
@@ -87,28 +87,33 @@ public:
 
 	vec3 getQuatFront()
 	{
-
-		return rotate(MyQuaternion, -worldFront);
+		vec3 frontq= rotate(MyQuaternion, -worldFront);
+		//cout << frontq.x << frontq.y << frontq.z << endl;
+		return frontq;
 	}
 
 
 	mat4 GetViewMatrixByQuat()
 	{
-		vec3 target = Position + getQuatFront() ;
-		vec3 cameraup = getQuatUp();
-		view= lookAt(Position, target, cameraup);
-		cout << view[0][0] << endl;
-		//cout << cameraup.x << cameraup.y << cameraup.z  << endl;
-		return view;
+
+		Front = getQuatFront();
+		Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+		Up = glm::normalize(glm::cross(Right, Front));
+
+		return GetViewMatrix();
 	}
 
 
 	mat4 UpdateCameraRotByQuat(float xOffset, float yOffset)
 	{
 
-		vec3 axis = vec3(xOffset, yOffset, 0.0f);
-		MyQuaternion=glm::rotate(MyQuaternion, SENSITIVITY * length(axis), normalize(axis));
-		//cout << MyQuaternion.x << MyQuaternion.y << MyQuaternion.z << endl;
+		vec3 axis = normalize(cross(vec3(xOffset, yOffset, 0.0f), vec3(0, 0,1)));
+		float angle_half = length(axis) * SENSITIVITY / 2*0.1f;
+
+		MyQuaternion *=   quat(cos(angle_half), axis.x * sin(angle_half), axis.y * sin(angle_half), axis.z * sin(angle_half));
+
+		//MyQuaternion *= angleAxis(angle_half, axis);
+
 		return GetViewMatrixByQuat();
 	}
 

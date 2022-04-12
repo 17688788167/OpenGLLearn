@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\OpenGL\glad\src\glad.c" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="camera2.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ShaderLearn.cpp" />
     <ClCompile Include="shader_s.cpp" />
@@ -160,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
+    <ClInclude Include="camera2.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="shader_s.h" />
     <ClInclude Include="stb_image.h" />

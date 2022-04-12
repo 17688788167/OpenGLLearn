@@ -70,7 +70,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	lastY = ypos;
 
 
-	viewFinel = ourCamera.UpdateCameraRotByQuat(xoffset, yoffset);
+	viewFinel = ourCamera.UpdateCameraRotByQuat(xoffset, -yoffset)* viewFinel;
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -81,6 +81,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 void glProcessInput(GLFWwindow* window, float deltaScends)
 {
+	
 
 	vec3 posoffset;
 	posoffset = vec3(0, 0, 0);
@@ -317,8 +318,9 @@ glm::vec3(-1.3f,  1.0f, -1.5f)
 	model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 	ourShader.setMatrix4x4("model", model);
-
+	
 	viewFinel = ourCamera.updateCameraPos(vec3(0, 0, 0), 0);
+	//viewFinel = ourCamera.UpdateCameraRotByQuat(0,0);
 	projectionFinel = ourCamera.UpdateCameraFov(0.0f);
 
 
